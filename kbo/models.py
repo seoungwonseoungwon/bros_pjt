@@ -11,7 +11,7 @@ class TeamList(models.Model):
     
     def get_absolute_url(self):
         # return f'/company_info/{self.team}'
-        return f'/{self.pk}/'
+        return f'/{self.team}/'
     
 class Hitting(models.Model):
     name = models.CharField(max_length=100)
