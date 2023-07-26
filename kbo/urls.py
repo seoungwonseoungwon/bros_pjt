@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index),
-    path('<str:player>/', views.team_detail),
+    path('<int:pk>/', views.team_detail),
 ]

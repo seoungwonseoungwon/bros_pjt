@@ -7,7 +7,7 @@
 </head>
 <body>
   {% for i in team%}
-    <h3><a href="">{{i.team}}</a></h3>
+    <h3><a href="{{ i.get_absolute_url }}">{{i.team}}</a></h3>
   {%endfor%}
   
 </body>
