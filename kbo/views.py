@@ -8,12 +8,21 @@ def index(request):
 
     return render(request, 'kbo/index.html', {'team':team})
 
-def team_detail(request,pk):
-    aa = TeamList.objects.get(pk=pk)
+def team_detail(request,team):
     
+    aa = TeamList.objects.get(team=team)
 
 
-    return render(request, 'kbo/team_detail.html',{'aa':aa})
+    player_h = Hitting.objects.filter(team=aa)
+    player_p = Pitcher.objects.filter(team=aa)
+    
+    detail = {
+        'aa':aa,
+        'player_h':player_h,
+        'player_p':player_p,
+    }
+
+    return render(request, 'kbo/team_detail.html',detail)
 # def team_detail(request,pk):
 #     # player_h = Hitting.objects.get(team_id=team_id)
 #     team_obj = get_object_or_404(TeamList, team=pk)
