@@ -9,6 +9,10 @@ class TeamList(models.Model):
     def __str__(self):
         return f'{self.team}'
     
+    def get_absolute_url(self):
+        # return f'/company_info/{self.team}'
+        return f'/{self.pk}/'
+    
 class Hitting(models.Model):
     name = models.CharField(max_length=100)
     war = models.FloatField()
@@ -22,6 +26,8 @@ class Hitting(models.Model):
 
     def __str__(self):
         return f'{self.team}  -  {self.name}'
+    
+
     
 class Pitcher(models.Model):
     team = models.ForeignKey(TeamList, on_delete=models.CASCADE,null=True)
