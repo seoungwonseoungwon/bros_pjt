@@ -9,7 +9,7 @@ class TeamList(models.Model):
     def __str__(self):
         return f'{self.team}'
     
-class TeamPlayer(models.Model):
+class Hitting(models.Model):
     name = models.CharField(max_length=100)
     war = models.FloatField()
     hits= models.IntegerField(null=True)
@@ -19,6 +19,23 @@ class TeamPlayer(models.Model):
     games_played = models.IntegerField(null=True)
     position = models.CharField(max_length=10)
     team = models.ForeignKey(TeamList, on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return f'{self.team}  -  {self.name}'
+    
+class Pitcher(models.Model):
+    team = models.ForeignKey(TeamList, on_delete=models.CASCADE,null=True)
+    name = models.CharField(max_length=100)
+    war = models.FloatField()
+    games_played = models.IntegerField()
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    era = models.FloatField(default=0.0)
+    saves =  models.IntegerField(default=0)
+    holds = models.IntegerField(default=0)
+    innings_pitched = models.FloatField(default=0.0)
+    # Add other pitcher fields as necessary
+    position = models.CharField(max_length=10, default='투수')
 
     def __str__(self):
         return f'{self.team}  -  {self.name}'
