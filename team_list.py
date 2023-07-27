@@ -11,7 +11,7 @@ django.setup()
 # from company_info.models import Company_list
 from kbo.models import Pitcher, TeamList
 
-f = open('data/투수/merged_pitching_records.csv', 'r', encoding='utf-8')
+f = open('data/투수/23NC_pitching__records.csv', 'r', encoding='utf-8')
 rdr = csv.reader(f)
 # next(rdr)
 # name 1
@@ -26,6 +26,8 @@ rdr = csv.reader(f)
 # innings_pitched 12
 # print(team_instance)
 for i in rdr:
+
+    # print(i[1],i[2])
     # 팀 이름 가져오기
     team_name = i[2]
 

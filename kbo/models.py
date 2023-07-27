@@ -4,13 +4,27 @@ from django.db import models
 class TeamList(models.Model):
     
     team = models.CharField(max_length=20)
-    
-    
+    year = models.IntegerField(default=23)
+    rank = models.IntegerField(null=True)
+    batting_average = models.FloatField(null=True)
+    on_base_percentage = models.FloatField(null=True)
+    slugging_percentage = models.FloatField(null=True)
+    on_base_plus_slugging = models.FloatField(null=True)
+    Fielding_Percentage = models.FloatField(null=True)
+    ERA = models.FloatField(null=True)
+    WHIP = models.FloatField(null=True)
+    win_percentage = models.FloatField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
     def __str__(self):
         return f'{self.team}'
     
     def get_absolute_url(self):
         # return f'/company_info/{self.team}'
+        return f'/{self.team}_player/'
+    
+    def get_absolute_team(self):
         return f'/{self.team}/'
     
 class Hitting(models.Model):
@@ -45,3 +59,5 @@ class Pitcher(models.Model):
 
     def __str__(self):
         return f'{self.team}  -  {self.name}'
+    
+
