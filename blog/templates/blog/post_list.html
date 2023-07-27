@@ -7,9 +7,9 @@
 </head>
 <body>
   <h1>Blog</h1>
-  {%for i in posts%}
+  {%for i in post_list%}
   <hr>
-  <h2>{{i.title}}</h2>
+  <h2><a href="{{i.get_absolute_url}}">{{i.title}}</a></h2>
   <h4>{{i.created_at}}</h4>
   <p>{{i.content}}</p>
   {%endfor%}
