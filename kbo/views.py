@@ -10,7 +10,7 @@ def index(request):
         'update':update,
     }
 
-    return render(request, 'kbo/index.html', team_data)
+    return render(request, 'kbo/home.html', team_data)
 
 def team_detail(request,team):
     
