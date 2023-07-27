@@ -4,9 +4,13 @@ from .models import TeamList, Hitting, Pitcher
 # Create your views here.
 def index(request):
     team = TeamList.objects.all().order_by('rank')
+    update = TeamList.objects.all()[:1]
+    team_data = {
+        'team':team,
+        'update':update,
+    }
 
-
-    return render(request, 'kbo/index.html', {'team':team})
+    return render(request, 'kbo/index.html', team_data)
 
 def team_detail(request,team):
     

@@ -13,6 +13,9 @@ class TeamList(models.Model):
     Fielding_Percentage = models.FloatField(null=True)
     ERA = models.FloatField(null=True)
     WHIP = models.FloatField(null=True)
+    win_percentage = models.FloatField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return f'{self.team}'
