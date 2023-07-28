@@ -6,20 +6,21 @@
         <div class="container">
             <div class="row">
                 <!-- Blog entries-->
-                <div class="col-lg-8">
+                <div class="col-lg-8" id="main-area">
                     <!-- Featured blog post-->
+                  {% if post_list.exists %}
                     {% for p in post_list%}
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="small text-muted">Posted on {{p.created_at}} by</div>
-                            <h2 class="card-title">{{p.title}}</h2>
-                            <p class="card-text">{{p.content}}</p>
-                            <a class="btn btn-primary" href="{{ p.get_absolute_url }}">Read more →</a>
+                    <div class="card mb-4 mt-4">
+                        <div class="card-body" style="display: flex; height: 60px;">
+                          <a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title}}</h4></a>
+                          <div class="small text-muted" style="line-height: 30px;">{{p.created_at}}</div>
+                            <p style="line-height: 30px;">{{p.author|upper}}</p>
                         </div>
                     </div>
                     {%endfor%}
-
-
+                    {% else %}
+                    <h3>아직 게시물이 없습니다</h3>
+{% endif%}
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
                         <hr class="my-0" />
