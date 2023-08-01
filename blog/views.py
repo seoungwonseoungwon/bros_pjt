@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Category, Tag
 from django.core.exceptions import PermissionDenied
+from django.utils.text import slugify
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
@@ -15,7 +16,40 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         current_user = self.request.user
         if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
-            return super(PostCreate, self).form_valid(form)
+            
+            response = super(PostCreate, self).form_valid(form)
+            
+            # 입력한 POST값을 받아 tags_str에 지정
+            tags_str = self.request.POST.get('tags_str')
+            if tags_str:
+                # 입력한 str 공백제거
+                tags_str = tags_str.strip()
+
+                # , ; 둘 다 가능하게 함
+                tags_str = tags_str.replace(',',';')
+                # ;를 구분자로 처리하고 tags_list에 담기
+                tags_list = tags_str.split(';')
+                print(tags_list)
+
+                for t in tags_list:
+                    # 입력한 태그 리스트를 for문돌리고 공백제거
+                    t = t.strip()
+                    print(t)
+
+                    # tag 공백일 때는 pass(for문 첫문장으로 이동, 다음 요소로 수행)
+                    if t == "":
+                        continue
+                    # 있으면 가져오고 없으면 만드는 함수
+                    tag, is_tag_created = Tag.objects.get_or_create(name=t)
+                    print(f'tag , is_tag_created: {tag}, {is_tag_created}')
+                    # 만약 없는 태그값을 받아왔다면 만든다
+
+                    if is_tag_created:
+                        tag.slug = slugify(t, allow_unicode=True)
+                        tag.save()
+                    self.object.tags.add(tag)
+
+            return response
         else:
             return redirect('/blog/')
         
