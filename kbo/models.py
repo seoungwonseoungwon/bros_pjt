@@ -20,7 +20,7 @@ class TeamList(models.Model):
     def __str__(self):
         return f'{self.team}'
     
-    def get_absolute_url(self):
+    def get_absolute_player(self):
         # return f'/company_info/{self.team}'
         return f'/{self.team}_player/'
     

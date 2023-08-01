@@ -8,8 +8,15 @@
                 <!-- Blog entries-->
                 <div class="col-lg-8" id="main-area">
                     <!-- Featured blog post-->
+                    {% if user.is_authenticated %}
+                    {% if user.is_superuser or user.is_staff %}
+                    <a href="/blog/create_post/" role="button" class="btn btn-info btn-sm float-right"><i class="fas fa-pen">&nbsp;&nbsp;New Post</i>></a>
+
+                    {% endif %}
+
+                    {% endif %}
                     <h1>Blog {% if category%} <span class="badge badge-secondary" style="color: black;">{{category}}</span>{%endif%}</h1>
-                    <h1>Blog {% if tag%} <span class="badge badge-light" style="color: black;"><i class="bi bi-tags-fill"></i>{{tag}} ({{ tag.post_set.count}})</span>{%endif%}</h1>
+                    <h1>{% if tag%} <span class="badge" style="color: black;"><i class="bi bi-tags-fill"></i>{{tag}} ({{ tag.post_set.count}})</span>{%endif%}</h1>
                   {% if post_list.exists %}
                     {% for p in post_list%}
                     <div class="card mb-4 mt-4" id="post-{{p.pk}}">
@@ -18,7 +25,7 @@
                           {% if p.tags.exists %}
                             <i class="bi bi-tags-fill"></i>
                             {% for tag in p.tags.iterator %}
-                            <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span></a>
+                            <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
                             {% endfor %}
                             <br>
                             <br>
