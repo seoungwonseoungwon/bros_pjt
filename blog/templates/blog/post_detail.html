@@ -27,6 +27,17 @@
                         <!-- Post content-->
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{post.content}}</p>
+                            {% if post.tags.exists %}
+                            <i class="bi bi-tags-fill"></i>
+                            {% for rag in post.tags.all %}
+                            <a href="{{ tag.get_absolute_url }}" class="badge badge-light">{{ tag }}</a>
+                            {% endfor %}
+                            <br>
+                            <br>
+                            {% endif %}
+
+
+
                             {% if post.file_upload %}
                             <a href="{{post.file_upload.url}}" class="btn btn-outline-dark" role="button" DOWNLOAD>Download  :  {{post.get_file_name}}</a>
                             {% endif %}
@@ -98,9 +109,14 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
+                                        {% for category in categories%}
+                                      <li>
+                                        <a style="text-decoration: none;" href="{{category.get_absolute_url}}">{{category}} ({{category.post_set.count}})</a>
+                                      </li>
+                                        {% endfor %}
+                                                                              <li>
+                                        <a style="text-decoration: none;" href="/blog/category/no_category/">미분류 ({{no.category_post_count}})</a>
+                                      </li>
                                     </ul>
                                 </div>
 
