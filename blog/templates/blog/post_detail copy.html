@@ -57,12 +57,18 @@
                             <div class="card-body">
                                 {% if user.is_authenticated %}
                                 <!-- Comment form-->
+                                <form id="comment-form" method="POST" action="{{ post.get_absolute_url }}new_comment/" class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                    {% csrf_token%}
+                                    <!-- <div class="form-group"></div> -->
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+
                                 <form class="mb-4" id="comment-form" method="POST" action="{{ post.get_absolute_url}}new_comment/">
+                                    {% csrf_token %}
                                     {% csrf_token %}
                                     <div class="form-group">{{ comment_form | crispy}}</div>
                                     <button class="btn btn-primary" type="submit">Submit</button>
                                 </form>
-
                                 <!-- Comment with nested comments-->
                                 {% else %}
                                 <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-toggle="modal" data-target="#exampleModal">Log in and leave a comment</a>
