@@ -15,7 +15,8 @@
                     {% endif %}
 
                     {% endif %}
-                    <h1>Blog {% if category%} <span class="badge badge-secondary" style="color: black;">{{category}}</span>{%endif%}</h1>
+                    <h1>{% if search_info %} <small class="text-muted" style="color: black;">{{search_info}}</small>{%endif%}</h1>
+                    <h1>{% if category%} <span class="badge badge-secondary" style="color: black;">{{category}}</span>{%endif%}</h1>
                     <h1>{% if tag%} <span class="badge" style="color: black;"><i class="bi bi-tags-fill"></i>{{tag}} ({{ tag.post_set.count}})</span>{%endif%}</h1>
                   {% if post_list.exists %}
                     {% for p in post_list%}
@@ -44,18 +45,33 @@
                     {% else %}
                     <h3>아직 게시물이 없습니다</h3>
 {% endif%}
-                    <!-- Pagination-->
-                    <nav aria-label="Pagination">
-                        <hr class="my-0" />
-                        <ul class="pagination justify-content-center my-4">
-                            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
-                            <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">3</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">15</a></li>
-                            <li class="page-item"><a class="page-link" href="#!">Older</a></li>
-                        </ul>
+
+<!-- Pagination-->
+<nav aria-label="Pagination">
+    <hr class="my-0" />
+    {% if is_paginated %}
+    <ul class="pagination justify-content-center my-4">
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&larr; Older</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">&larr; Older</a>
+        </li>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Newer &rarr;</a>
+        </li>
+        {% else %}
+        <li>
+            <a href="#" class="page-link">Newer &rarr;</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
                     </nav>
                 </div>
                 <!-- Side widgets-->
@@ -65,8 +81,8 @@
                         <div class="card-header">Search</div>
                         <div class="card-body">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                                <input id="search-input" class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button-search" type="button" onclick="searchPost();">Go!</button>
                             </div>
                         </div>
                     </div>
@@ -97,9 +113,30 @@
                 </div>
             </div>
         </div>
+        <script>
+            function searchPost(){
+                let searchValue = document.getElementById('search-input').value.trim();
+                if (searchValue.length > 1){
+                    location.href = "/blog/search/" + searchValue + "/";
+                }
+                else{
+                    alert('검색어('+ searchValue +')가 너무 짧습니다.');
+                }
+            };
+
+            document.getElementById('search-input').addEventListener('keyup', function(evet){
+                if(event.key === 'Enter'){
+                    searchPost();
+                }
+            });
+
+
+        </script>
         {% endblock %}
+        
         {% include 'footer.html'%}
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+
