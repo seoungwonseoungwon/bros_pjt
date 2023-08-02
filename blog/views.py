@@ -191,3 +191,13 @@ def new_comment(request, pk):
     else:
         # 로그인하지 않았다면 PermissionDenied 권한이 거부됨
         raise PermissionDenied
+    
+
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post = comment.post
+    if request.user.is_authenticated and request.user == comment.author:
+        comment.delete()
+        return redirect(post.get_absolute_url())
+    else:
+        raise PermissionDenied
