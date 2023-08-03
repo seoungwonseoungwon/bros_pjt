@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.urls import reverse
 
 def likes(request, pk):
     like_b = get_object_or_404(Post, pk=pk)
@@ -188,6 +189,21 @@ class PostSearch(PostList):
 
 class PostDetail(DetailView):
     model = Post
+    # @staticmethod
+    # def view_count(request, pk):
+    #     view_c = get_object_or_404(Post, pk=pk)
+    #     view_c.views += 1
+    #     view_c.save()
+    #     return view_c
+
+    # # def get_object(self):
+    # def get_object(request, pk):
+    #     # forum = get_object_or_404(Post)
+    #     forum = get_object_or_404(Post, pk=pk)
+    #     forum.views += 1
+    #     forum.save()
+    #     return forum
+
 
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data()
@@ -243,6 +259,18 @@ def delete_comment(request, pk):
         raise PermissionDenied
     
 
+def delete_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.user.is_authenticated and request.user == post.author:
+        post.delete()
+        return redirect('/blog/')
+    else:
+        raise PermissionDenied
+
+
+
+    
+
 def comment_likes(request, pk):
     like_c = get_object_or_404(Comment, pk=pk)
     re = like_c.post
@@ -256,3 +284,5 @@ def comment_likes(request, pk):
         like_c.save()
     # return redirect('/blog/' + str(pk))
     return redirect(re.get_absolute_url())
+
+

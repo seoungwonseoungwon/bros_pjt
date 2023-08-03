@@ -25,6 +25,7 @@
                           <a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title}}</h4></a>
                           <span class="float-end">좋아요 개수{{ p.like_count}}</span>
                           <span class="float-end">댓글 개수{{ p.comment_count}}</span>
+                          <span class="float-end">조회수{{ p.views}}</span>
                           {% if p.tags.exists %}
                           <i class="bi bi-tags-fill"></i>
                           {% for tag in p.tags.iterator %}

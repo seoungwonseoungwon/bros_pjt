@@ -51,6 +51,8 @@ class Post(models.Model):
 
     comment_count = models.PositiveIntegerField(default=0)
 
+    views = models.PositiveIntegerField(default=0)
+
 
     def __str__(self):
         return f'[{self.pk}] {self.title} :: {self.author}'
