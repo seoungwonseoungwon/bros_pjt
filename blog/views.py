@@ -147,6 +147,7 @@ class PostList(ListView):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        # context['comment_count'] = Comment.objects.filter().count()
         return context
     
 def category_page(request, slug):
@@ -217,6 +218,8 @@ def new_comment(request, pk):
                 comment = comment_form.save(commit=False)
                 comment.post = post
                 comment.author = request.user
+                post.comment_count += 1
+                post.save()
                 comment.save()
                 # 작성버튼 누르면 페이지로 리다이렉트
                 return redirect(comment.get_absolute_url())
@@ -229,9 +232,12 @@ def new_comment(request, pk):
 
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
+    c_count = comment.post
     post = comment.post
     if request.user.is_authenticated and request.user == comment.author:
         comment.delete()
+        c_count.comment_count -= 1
+        c_count.save()
         return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
