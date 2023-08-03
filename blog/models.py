@@ -3,6 +3,8 @@ import os
 from django.contrib.auth.models import User
 
 
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -43,6 +45,9 @@ class Post(models.Model):
     category = models.ForeignKey(Category, null=True,blank=True,  on_delete=models.SET_NULL)
 
     tags = models.ManyToManyField(Tag, blank=True)
+
+    like = models.ManyToManyField(User, related_name='likes', blank=True)
+    like_count = models.PositiveIntegerField(default=0)
 
 
     def __str__(self):

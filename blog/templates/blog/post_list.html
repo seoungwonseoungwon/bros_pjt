@@ -23,12 +23,15 @@
                     <div class="card mb-4 mt-4" id="post-{{p.pk}}">
                         <div class="card-body" style="display: flex; height: 60px;">
                           <a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title}}</h4></a>
+                          <span class="float-end">{{ p.like_count}}</span>
                           {% if p.tags.exists %}
-                            <i class="bi bi-tags-fill"></i>
-                            {% for tag in p.tags.iterator %}
-                            <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
-                            {% endfor %}
-                            <br>
+                          <i class="bi bi-tags-fill"></i>
+                          {% for tag in p.tags.iterator %}
+                          <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
+                          {% endfor %}
+
+
+                          <br>
                             <br>
 
                           {% endif %}

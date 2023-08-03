@@ -9,6 +9,18 @@ from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
+def likes(request, pk):
+    like_b = get_object_or_404(Post, pk=pk)
+    if request.user in like_b.like.all():
+        like_b.like.remove(request.user)
+        like_b.like_count -= 1
+        like_b.save()
+    else:
+        like_b.like.add(request.user)
+        like_b.like_count +=1
+        like_b.save()
+    return redirect('/blog/' + str(pk))
+
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
