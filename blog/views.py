@@ -23,6 +23,8 @@ def likes(request, pk):
 
 
 
+
+
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
@@ -233,3 +235,18 @@ def delete_comment(request, pk):
         return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
+    
+
+def comment_likes(request, pk):
+    like_c = get_object_or_404(Comment, pk=pk)
+    re = like_c.post
+    if request.user in like_c.like.all():
+        like_c.like.remove(request.user)
+        like_c.like_count -= 1
+        like_c.save()
+    else:
+        like_c.like.add(request.user)
+        like_c.like_count +=1
+        like_c.save()
+    # return redirect('/blog/' + str(pk))
+    return redirect(re.get_absolute_url())

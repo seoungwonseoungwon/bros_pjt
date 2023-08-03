@@ -37,7 +37,7 @@
                                 {{ post.like_count}}
                                 {%else%}
                                 
-                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i class="bi bi-heart"></i></a>
+                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i style="color: red;" class="bi bi-heart"></i></a>
                                 {{ post.like_count}}
                                 {% endif %}
                                 {% else %}
@@ -121,9 +121,26 @@
 
                                         
                                         {% endif %}
-                                        <div class="fw-bold" >{{ comment.author.username}} &nbsp;&nbsp;<small class="text-muted">{{comment.created_at}}</small></div>
-                                        {{ comment.content | linebreaks}}
+                                        <div class="fw-bold" >{{ comment.author.username}} &nbsp;&nbsp;<small class="text-muted">{{comment.created_at}}</small>
+                                        
+                                            {% if user.is_authenticated %}
+                                            {% if user in comment.like.all %}
+                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
+                                            {{ comment.like_count}}
+                                            {%else%}
+                                            
+                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart"></i></a>
+                                            {{ comment.like_count}}
+                                            {% endif %}
+                                            {% else %}
+                                            <!-- <div id="not_like" onclick="not_login()"><a style="text-decoration: none;" href="">♡</a></div> -->
+                                            <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i style="color: red;" class="bi bi-heart"></i></a>
+                                            {{ comment.like_count}}
+                                            {% endif %}
 
+
+                                        </div>
+                                        {{ comment.content | linebreaks}}
                                         {% if comment.created_at != comment.modified_at %}
                                         <p class="text-muted float-end"><small>Updated: {{ comment.modified_at }}</small></p>
 
