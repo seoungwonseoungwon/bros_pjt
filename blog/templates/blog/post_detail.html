@@ -30,6 +30,22 @@
                         <!-- Preview image figure-->
                         <!-- Post content-->
                         <section class="mb-5">
+                            <a href="/blog/likes/{{post.pk}}">
+                                {% if user.is_authenticated %}
+                                {% if user in post.like.all %}
+                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
+                                {{ post.like_count}}
+                                {%else%}
+                                
+                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i class="bi bi-heart"></i></a>
+                                {{ post.like_count}}
+                                {% endif %}
+                                {% else %}
+                                <!-- <div id="not_like" onclick="not_login()"><a style="text-decoration: none;" href="">♡</a></div> -->
+                                <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i class="bi bi-heart"></i></a>
+                                {{ post.like_count}}
+                                {% endif %}
+                            </a>
                             <p class="fs-5 mb-4">{{post.content}}</p>
                             {% if post.tags.exists %}
                             <i class="bi bi-tags-fill"></i>
@@ -171,6 +187,11 @@
                 </div>
             </div>
         </div>
+        <script>
+            let not_login = () =>{
+                alert('로그인해')
+}
+        </script>
 
         {% endblock %}
         <!-- Bootstrap core JS-->
