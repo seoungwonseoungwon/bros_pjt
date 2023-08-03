@@ -71,6 +71,9 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    like = models.ManyToManyField(User, related_name='c_likes', blank=True)
+    like_count = models.PositiveIntegerField(default=0)
+
     def __str__(self):
         return f'{self.author}::{self.content}'
 
