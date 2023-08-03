@@ -47,32 +47,65 @@
 {% endif%}
 
 <!-- Pagination-->
-<nav aria-label="Pagination">
-    <hr class="my-0" />
-    {% if is_paginated %}
-    <ul class="pagination justify-content-center my-4">
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&larr; Older</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#">&larr; Older</a>
-        </li>
-        {% endif %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center mb-4">
 
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Newer &rarr;</a>
-        </li>
-        {% else %}
-        <li>
-            <a href="#" class="page-link">Newer &rarr;</a>
-        </li>
+      <!-- 이전페이지 이동 -->
+      <!-- 1페이지일 경우는 비활성화, 1페이지 아닐경우는 활성화 -->
+      <!-- page_obj.has_previous : 이전 페이지가 있으면 True -->
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="/blog/?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <!-- 이전 페이지가 없는 경우 -->
+      <li class="page-item disabled">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+
+      {% endif %}
+
+      <!-- 페이지별 목록 보기 -->
+      <!-- 
+        views.py의 PostList 클래스에 paginate_by = 3 정의를 하면 템플릿에 넘겨주는 객체 변수 
+        page_obj.paginator.page_range 
+         -->
+      {% for page in page_obj.paginator.page_range %}
+      <!-- 
+        현재 선택한 페이지 번호
+         page_obj.number-->
+         {% if page_obj.number == forloop.counter %}
+         <!-- 현재 선택한 페이지 번호는 비활성화 시킴 -->
+            <li class="page-item disabled" ><a class="page-link bg-primary text-white" href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
+         {% else %}
+         <!-- 선택하지 않은 페이지 번호는 활성화 시킴 -->
+            <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ page }}">{{ page }}</a></li>
+
         {% endif %}
+      {% endfor %}
+
+
+      <!-- 다음페이지로 이동 -->
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="/blog/?page={{ page_obj.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <!-- 다음 페이지가 없는경우 -->
+      <li class="page-item disabled" style="display: none;">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
     </ul>
-    {% endif %}
-                    </nav>
+  </nav>
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">
