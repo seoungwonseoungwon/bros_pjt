@@ -205,6 +205,7 @@ class PostDetail(DetailView):
     #     return forum
 
 
+
     def get_context_data(self, **kwargs):
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
