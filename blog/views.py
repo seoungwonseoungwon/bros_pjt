@@ -2,13 +2,14 @@ from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post, Category, Tag, Comment
-from .forms import CommentForm
+from .models import Post, Category, Tag, Comment, ReComment
+from .forms import CommentForm, ReCommentForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 def likes(request, pk):
     like_b = get_object_or_404(Post, pk=pk)
@@ -35,7 +36,7 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
             return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
-
+        
 
 
 
@@ -189,17 +190,18 @@ class PostSearch(PostList):
 
 class PostDetail(DetailView):
     model = Post
-    # @staticmethod
-    # def view_count(request, pk):
-    #     view_c = get_object_or_404(Post, pk=pk)
-    #     view_c.views += 1
-    #     view_c.save()
-    #     return view_c
+    # # @staticmethod
+    # # def view_count(request, pk):
+    # #     view_c = get_object_or_404(Post, pk=pk)
+    # #     view_c.views += 1
+    # #     view_c.save()
+    # #     return view_c
 
     # # def get_object(self):
-    # def get_object(request, pk):
+    # def get_object(self, request, **kwargs):
+    #     print("pk 확인", kwargs)
     #     # forum = get_object_or_404(Post)
-    #     forum = get_object_or_404(Post, pk=pk)
+    #     forum = get_object_or_404(Post, pk=kwargs)
     #     forum.views += 1
     #     forum.save()
     #     return forum
@@ -246,6 +248,52 @@ def new_comment(request, pk):
         # 로그인하지 않았다면 PermissionDenied 권한이 거부됨
         raise PermissionDenied
     
+# def new_recomment(request, pk):
+#     if request.user.is_authenticated:
+#         post = get_object_or_404(Comment, pk=pk)
+#         # post1 = get_object_or_404(Post,pk = pk)
+#         if request.method == 'POST':
+#             recomment_form = ReCommentForm(request.POST)
+#             if recomment_form.is_valid():
+#                 recomment = recomment_form.save(commit=False)
+#                 recomment.post = post
+#                 recomment.author = request.user
+#                 # post.comment_count += 1
+#                 # post.save()
+#                 recomment.save()
+#                 return redirect(post.get_absolute_url())
+#         else:
+#             return redirect(post.get_absolute_url())
+#     else:
+#         return PermissionDenied
+
+@login_required
+def create_recomment(request, post_id, comment_pk):
+    post = get_object_or_404(Post, pk=post_id)
+    parent_comment = get_object_or_404(Comment, pk=comment_pk)
+    c_count = parent_comment.post
+
+    if request.method == 'POST':
+        recomment_form = ReCommentForm(request.POST)
+        if recomment_form.is_valid():
+            recomment = recomment_form.save(commit=False)
+            recomment.post = post
+            recomment.parent_comment = parent_comment
+            recomment.author = request.user
+            recomment.save()
+
+            c_count.comment_count += 1
+            c_count.save()
+
+            return redirect(post.get_absolute_url())
+
+    else:
+        recomment_form = ReCommentForm()
+
+    return render(request, 'create_recomment.html', {'recomment_form': recomment_form})
+
+
+
 
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)

@@ -66,6 +66,10 @@ class Post(models.Model):
     def get_file_ext(self):
         return self.get_file_name().split('.')[-1]
     
+    @property
+    def update_counter(self):
+        self.views = self.views + 1
+        self.save()
 
     
 class Comment(models.Model):
@@ -83,3 +87,31 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return f'{self.post.get_absolute_url()}#comment-{self.pk}'
+    
+
+# class ReComment(models.Model):
+#     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+#     author = models.ForeignKey(User, on_delete=models.CASCADE)
+#     content = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     modified_at = models.DateTimeField(auto_now=True)
+
+#     def __str__(self):
+#         return f'{self.author} :: {self.content}'
+    
+#     def get_absolute_url(self):
+#         return f'{self.comment.get_absolute_url()}#recomment-{self.pk}'
+
+class ReComment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.author}::{self.content}'
+
+    def get_absolute_url(self):
+        return f'{self.parent_comment.get_absolute_url()}#recomment-{self.pk}'

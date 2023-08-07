@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% include 'navbar.html'%}
+{{post.update_counter}}
         <!-- Page content-->
         <div class="container mt-5">
             <div class="row">
@@ -94,100 +95,87 @@
 
                     
                     <!-- Comments section-->
-                    <section class="mb-5">
-                        <div class="card bg-light"><h5>Leave a Comment</h5>
-                            <div class="card-body">
-                                {% if user.is_authenticated %}
-                                <!-- Comment form-->
-                                <form class="mb-4" id="comment-form" method="POST" action="{{ post.get_absolute_url}}new_comment/">
-                                    {% csrf_token %}
-                                    <div class="form-group">{{ comment_form | crispy}}</div>
-                                    <button class="btn btn-primary" type="submit">Submit</button>
-                                </form>
+                    <!-- Comments section-->
+<section class="mb-5">
+    <div class="card bg-light">
+        <h5>Leave a Comment</h5>
+        <div class="card-body">
+            {% if user.is_authenticated %}
+            <!-- Comment form -->
+            <form class="mb-4" id="comment-form" method="POST" action="{{ post.get_absolute_url }}new_comment/">
+                {% csrf_token %}
+                <div class="form-group">{{ comment_form | crispy }}</div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+            {% else %}
+            <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-toggle="modal" data-target="#exampleModal">Log in and leave a comment</a>
+            {% endif %}
 
-                                <!-- Comment with nested comments-->
-                                {% else %}
-                                <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-toggle="modal" data-target="#exampleModal">Log in and leave a comment</a>
+            {% if post.comment_set.exists %}
+            {% for comment in post.comment_set.iterator %}
+            <div class="d-flex mb-4">
+                <!-- Parent comment -->
+                <div class="flex-shrink-0" id="comment-{{ comment.pk }}"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                <div class="ms-3">
+                    {% if user.is_authenticated and comment.author == user %}
+                    <div class="float-end">
+                        <a role="button" class="btn btn-sm btn-info float-end" id="comment-{{ comment.pk }}-update-btn" href="/blog/update_comment/{{ comment.pk }}/">edit</a>
+                        <a role="button" href="#" id="comment-{{ comment.pk }}-delete-modal-btn" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCommentModal-{{ comment.pk }}">delete</a>
+                    </div>
+                    {% endif %}
+                    <div class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small>
+                        {% if user.is_authenticated %}
+                        {% if user in comment.like.all %}
+                        <a style="text-decoration: none;" href="/blog/comment_likes/{{ comment.pk }}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
+                        {{ comment.like_count }}
+                        {% else %}
+                        <a style="text-decoration: none;" href="/blog/comment_likes/{{ comment.pk }}"><i style="color: red;" class="bi bi-heart"></i></a>
+                        {{ comment.like_count }}
+                        {% endif %}
+                        {% else %}
+                        <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i style="color: red;" class="bi bi-heart"></i></a>
+                        {{ comment.like_count }}
+                        {% endif %}
+                    </div>
+                    <div>{{ comment.content | linebreaks }}</div>
+                    {% if comment.created_at != comment.modified_at %}
+                    <p class="text-muted float-end"><small>Updated: {{ comment.modified_at }}</small></p>
+                    {% endif %}
 
-                                {% endif %}
-
-                                {% if post.comment_set.exists %}
-                                {% for comment in post.comment_set.iterator %}
-                                <div class="d-flex mb-4">
-                                    <!-- Parent comment-->
-                                    <div class="flex-shrink-0" id="comment-{{ comment.pk }}"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        {% if user.is_authenticated and comment.author == user %}
-                                        <div class="float-end">
-                                        <a role="button" class="btn btn-sm btn-info float-end" id="comment-{{ comment.pk }}-update-btn" href="/blog/update_comment/{{ comment.pk}}/">edit</a>
-                                        <a role="button" href="#" id="comment-{{ comment.pk }}-delete-modal-btn" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCommentModal-{{ comment.pk }}">delete</a>
-                                    </div>
-
-                                                        <!-- modal -->
-                    <div class="modal fade" id="deleteCommentModal-{{ comment.pk }}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Are You Sure?</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <del>{{ comment | linebreaks}}</del>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <a role="button" class="btn btn-danger" href="/blog/delete_comment/{{ comment.pk }}/">Delete</a>
-                                </div>
+                    <!-- 대댓글 -->
+                    {% if comment.recomment_set.exists %}
+                    {% for recomment in comment.recomment_set.all %}
+                    <div class="ms-3">
+                        <div class="d-flex mb-4">
+                            <!-- ReComment -->
+                            <div class="flex-shrink-0" id="recomment-{{ recomment.pk }}"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                            <div class="ms-3">
+                                <div class="fw-bold">{{ recomment.author }} &nbsp;&nbsp;<small class="text-muted">{{ recomment.modified_at }}</small></div>
+                                <div>{{ recomment.content }}</div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
+                    {% endif %}
 
-
-                                        
-                                        {% endif %}
-                                        <div class="fw-bold" >{{ comment.author.username}} &nbsp;&nbsp;<small class="text-muted">{{comment.created_at}}</small>
-                                        
-                                            {% if user.is_authenticated %}
-                                            {% if user in comment.like.all %}
-                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
-                                            {{ comment.like_count}}
-                                            {%else%}
-                                            
-                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart"></i></a>
-                                            {{ comment.like_count}}
-                                            {% endif %}
-                                            {% else %}
-                                            <!-- <div id="not_like" onclick="not_login()"><a style="text-decoration: none;" href="">♡</a></div> -->
-                                            <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i style="color: red;" class="bi bi-heart"></i></a>
-                                            {{ comment.like_count}}
-                                            {% endif %}
-
-
-                                        </div>
-                                        {{ comment.content | linebreaks}}
-                                        {% if comment.created_at != comment.modified_at %}
-                                        <p class="text-muted float-end"><small>Updated: {{ comment.modified_at }}</small></p>
-
-                                        {% endif %}
-
-                                        <!-- Child comment 1-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                                {% endif %}
-
-                            </div>
+                    <!-- 대댓글 작성 폼 -->
+                    <div class="d-flex mt-4">
+                        <div class="ms-3">
+                            <form class="mb-4" id="comment-form" method="POST" action="create_recomment/{{comment.pk}}/">
+                                {% csrf_token %}
+                                <div class="form-group">{{ comment_form | crispy }}</div>
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            </form>
                         </div>
-                    </section>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">
