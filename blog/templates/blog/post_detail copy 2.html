@@ -1,0 +1,276 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'navbar.html'%}
+        <!-- Page content-->
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Post content-->
+                    <article>
+                        <!-- Post header-->
+                        <header class="mb-4">
+                            <!-- Post title-->
+                            <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+                            <!-- Post meta content-->
+                            <div class="text-muted fst-italic mb-2">{{post.author|upper}}</div>
+                            <hr>
+                            {% if user.is_authenticated and user == post.author %}
+                            <a class="btn btn-info btn-sm float-end" href="/blog/update_post/{{ post.pk }}/" role="button"><i class="fas fa-pen"></i>Edit Post</a>
+                            <a role="button" href="#" id="comment-{{ post.pk }}-delete-modal-btn" class="btn btn-sm btn-danger float-end" data-toggle="modal" data-target="#deleteCommentModal-{{ post.pk }}">delete</a>
+
+
+                            <div class="modal fade" id="deleteCommentModal-{{ post.pk }}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Are You Sure?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <del>{{ post | linebreaks}}</del>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <a role="button" class="btn btn-danger" href="/blog/delete_post/{{ post.pk }}/">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            {% endif %}
+                            <!-- Post categories-->
+                            <p>{{post.created_at}}</p>
+                            {% if post.category %}
+                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{post.category}}</a>
+                            {% else %}
+                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">미분류</a>
+
+                            {% endif %}
+                        </header>
+                        <!-- Preview image figure-->
+                        <!-- Post content-->
+                        <section class="mb-5">
+                            <a href="/blog/likes/{{post.pk}}">
+                                {% if user.is_authenticated %}
+                                {% if user in post.like.all %}
+                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
+                                {{ post.like_count}}
+                                {%else%}
+                                
+                                <a style="text-decoration: none;" href="/blog/likes/{{post.pk}}"><i style="color: red;" class="bi bi-heart"></i></a>
+                                {{ post.like_count}}
+                                {% endif %}
+                                {% else %}
+                                <!-- <div id="not_like" onclick="not_login()"><a style="text-decoration: none;" href="">♡</a></div> -->
+                                <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i style="color: red;" class="bi bi-heart"></i></a>
+                                {{ post.like_count}}
+                                {% endif %}
+                            </a>
+                            <p class="fs-5 mb-4">{{post.content}}</p>
+                            {% if post.tags.exists %}
+                            <i class="bi bi-tags-fill"></i>
+                            {% for tag in post.tags.all %}
+                            <a style="color: black; text-decoration: none;" href="{{ tag.get_absolute_url }}" class="badge text-bg-primary">{{ tag }}</a>
+                            {% endfor %}
+                            <br>
+                            <br>
+                            {% endif %}
+
+
+
+                            {% if post.file_upload %}
+                            <a href="{{post.file_upload.url}}" class="btn btn-outline-dark" role="button" DOWNLOAD>Download  :  {{post.get_file_name}}</a>
+                            {% endif %}
+                    </article>
+
+
+
+
+                    
+                    <!-- Comments section-->
+                    <section class="mb-5">
+                        <div class="card bg-light"><h5>Leave a Comment</h5>
+                            <div class="card-body">
+                                {% if user.is_authenticated %}
+                                <!-- Comment form-->
+                                <form class="mb-4" id="comment-form" method="POST" action="{{ post.get_absolute_url}}new_comment/">
+                                    {% csrf_token %}
+                                    <div class="form-group">{{ comment_form | crispy}}</div>
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </form>
+
+                                <!-- Comment with nested comments-->
+                                {% else %}
+                                <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="#" data-toggle="modal" data-target="#exampleModal">Log in and leave a comment</a>
+
+                                {% endif %}
+
+
+                                
+
+                                {% if post.comment_set.exists %}
+                                {% for comment in post.comment_set.iterator %}
+                                <div class="d-flex mb-4">
+                                    <!-- Parent comment-->
+                                    <div class="flex-shrink-0" id="comment-{{ comment.pk }}"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                    <div class="ms-3">
+                                        {% if user.is_authenticated and comment.author == user %}
+                                        <div class="float-end">
+                                        <a role="button" class="btn btn-sm btn-info float-end" id="comment-{{ comment.pk }}-update-btn" href="/blog/update_comment/{{ comment.pk}}/">edit</a>
+                                        <a role="button" href="#" id="comment-{{ comment.pk }}-delete-modal-btn" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCommentModal-{{ comment.pk }}">delete</a>
+                                    </div>
+
+                                                        <!-- modal -->
+                    <div class="modal fade" id="deleteCommentModal-{{ comment.pk }}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Are You Sure?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <del>{{ comment | linebreaks}}</del>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <a role="button" class="btn btn-danger" href="/blog/delete_comment/{{ comment.pk }}/">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                                        
+                                        {% endif %}
+                                        <div class="fw-bold" >{{ comment.author.username}} &nbsp;&nbsp;<small class="text-muted">{{comment.created_at}}</small>
+                                        
+                                            {% if user.is_authenticated %}
+                                            {% if user in comment.like.all %}
+                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
+                                            {{ comment.like_count}}
+                                            {%else%}
+                                            
+                                            <a style="text-decoration: none;" href="/blog/comment_likes/{{comment.pk}}"><i style="color: red;" class="bi bi-heart"></i></a>
+                                            {{ comment.like_count}}
+                                            {% endif %}
+                                            {% else %}
+                                            <!-- <div id="not_like" onclick="not_login()"><a style="text-decoration: none;" href="">♡</a></div> -->
+                                            <a role="button" style="text-decoration: none;" href="#" data-toggle="modal" data-target="#exampleModal"><i style="color: red;" class="bi bi-heart"></i></a>
+                                            {{ comment.like_count}}
+                                            {% endif %}
+
+                                        <!--  댓글 content -->
+                                        <!--  댓글 content -->
+                                        <div>
+                                        </div>
+                                        {{ comment.content | linebreaks}}
+                                        {% if comment.created_at != comment.modified_at %}
+                                        <p class="text-muted float-end"><small>Updated: {{ comment.modified_at }}</small></p>
+
+                                        {% endif %}
+
+
+                                        <!-- 대댓글-->
+                                        {% if comment.recomment_set.exists %}
+                                        {% for i in comment.recomment_set.all %}
+
+                                            
+
+                                        <div class="ms-3">
+                                            <div class="d-flex mb-4">
+                                                <!-- Parent comment-->
+                                                <div class="flex-shrink-0" id="comment-{{ comment.pk }}"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                                
+                                                    <div class="fw-bold" >{{ i.author}} &nbsp;&nbsp;<small class="text-muted">{{ i.modified_at }}</small>
+                                                    <div>{{i.content}}</div>
+                                                </div>
+                                            
+
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                        <div class="d-flex mt-4">
+                                            <div class="ms-3">
+                                                
+                                                <form class="mb-4" id="comment-form" method="POST" action="create_recomment/{{comment.pk}}/">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">{{ comment_form | crispy}}</div>
+                                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                                    {% csrf_token %}
+                                                </form>
+
+                                            </div>
+                                                
+                                                <!-- <div class="fw-bold">Commenter Name</div>
+                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors. -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- Side widgets-->
+                <div class="col-lg-4">
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Categories widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Categories</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <ul class="list-unstyled mb-0">
+                                        {% for category in categories%}
+                                      <li>
+                                        <a style="text-decoration: none;" href="{{category.get_absolute_url}}">{{category}} ({{category.post_set.count}})</a>
+                                      </li>
+                                        {% endfor %}
+                                                                              <li>
+                                        <a style="text-decoration: none;" href="/blog/category/no_category/">미분류 ({{no.category_post_count}})</a>
+                                      </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Side widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Side Widget</div>
+                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let not_login = () =>{
+                alert('로그인해')
+}
+        </script>
+
+        {% endblock %}
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
