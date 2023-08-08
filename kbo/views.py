@@ -5,9 +5,11 @@ from .models import TeamList, Hitting, Pitcher
 def index(request):
     team = TeamList.objects.all().order_by('rank')
     update = TeamList.objects.all()[:1]
+    pre_rank = TeamList.objects.all().order_by('pre_rank')
     team_data = {
         'team':team,
         'update':update,
+        'pre_rank':pre_rank,
     }
 
     return render(request, 'kbo/home.html', team_data)

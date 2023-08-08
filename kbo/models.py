@@ -15,6 +15,8 @@ class TeamList(models.Model):
     WHIP = models.FloatField(null=True)
     win_percentage = models.FloatField(null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    pre_rank = models.PositiveIntegerField(default=0)
+    pre_percent = models.FloatField(default=0)
 
 
     def __str__(self):
