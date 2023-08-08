@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-
+{% load static %}
 
 
 {% block content %}
@@ -9,8 +9,9 @@
 
 <div class="container">
   <div class="row">
+    <div class="col-md-6">
     {% for i in info %}
-    <div class="col-lg-4 mb-4">
+    <div style="width: 300px; margin-top: 50px;" class="col-lg-4 mb-4">
       <div class="card">
         <div class="card-header bg-primary text-white">
           <h3>{{ i.team }}</h3>
@@ -35,9 +36,14 @@
         {% endfor %}
       </div>
     </div>
+  </div>
+  <div class="col-md-6">
+    <img style="width: 800px; height: 600px;" src="{% static '머신러닝데이터'%}/{{i.team}}.png" alt="">
     {% endfor %}
   </div>
+  </div>
 </div>
+
 
 
 

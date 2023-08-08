@@ -31,17 +31,18 @@
                       <div class="card mb-3 mt-4">
                         <div class="card-body">
                           <div class="row" style="display: flex;">
-                          <div style="display: flex;" class="col-8"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title|truncatechars:20}}</h4></a>
+                          <div style="display: flex;" class="col-9"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title|truncatechars:18}}</h4></a>
                             <span style="height: 34px; margin-left: 20px;" class="badge bg-secondary">
                               {% if p.category %}
-                          <span class="badge badge-secondary float-right" style="color: black; line-height: 17px; font-size: 12px;">{{p.category}}</span>
-                          {% else %}
-                          <span style="color: black; line-height: 17px; font-size: 12px;" class="badge badge-secondary float-right">미분류</span>
-                          {% endif %}
+                              <span class="badge badge-secondary float-right" style="color: black; line-height: 17px; font-size: 12px;">{{p.category}}</span>
+                              {% else %}
+                              <span style="color: black; line-height: 17px; font-size: 12px;" class="badge badge-secondary float-right">미분류</span>
+                              {% endif %}
                             </span>
+                            <p class="col" style="margin-left: 10px;"><small class="text-body-secondary">{{p.created_at|timesince}}</small></p>
                           </div>
-                          <div class="col-4">
-                          <h5 class="card-title">{{p.author|upper}}</h5></div>
+                          <div class="col-3">
+                          <strong class="card-title">작성자 {{p.author|upper}}</strong></div>
                         </div>
                         <br>
                         <div class="row" style="display: flex; height: 20px;">
@@ -54,11 +55,13 @@
                             {% endif %}
                           </p>
                         </div>
-                        <div style="margin-top: 10px; height: 40px;">
+                        <div style="margin-top: 10px; height: 20px;">
+                          <div>
                           <span class="">좋아요 {{ p.like_count}}</span>
-                          <span class="">댓글{{ p.comment_count}}</span>
+                          <span class="">댓글 {{ p.comment_count}}</span>
                           <span class="">조회수 {{ p.views}}</span>
-                          <p class="col"><small class="text-body-secondary">{{p.created_at|timesince}}</small></p>
+
+                        </div>
                         </div>
                       </div>
                     </div>
