@@ -1,10 +1,6 @@
 {%extends 'base.html'%}
-{% load custom_filters %}
 {% block content %}
 {% include 'navbar.html'%}
-
-
-
         <!-- Page content-->
         <div class="container">
             <div class="row">
@@ -13,7 +9,7 @@
                     <!-- Featured blog post-->
                     {% if user.is_authenticated %}
                     {% if user.is_superuser or user.is_staff %}
-                    <div style="height: 50px;"><a href="/blog/create_post/" role="button" class="btn btn-info btn-sm float-end mt-4"><i class="fas fa-pen">&nbsp;&nbsp;글 작성</i>></a></div>
+                    <a href="/blog/create_post/" role="button" class="btn btn-info btn-sm float-end mt-4"><i class="fas fa-pen">&nbsp;&nbsp;New Post</i>></a>
 
                     {% endif %}
 
@@ -24,45 +20,15 @@
                   {% if post_list.exists %}
                     {% for p in post_list%}
                     <div class="card mb-4 mt-4" id="post-{{p.pk}}">
-
-
-                      <!-- test -->
-                      <div class="card mb-3">
-                        <div class="card-body">
-                          <div class="row" style="display: flex;">
-                          <div class="col"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title|truncatechars:9}}</h4></a></div>
-                          <div class="col">
-                          <h5 class="card-title">{{p.author|upper}}</h5></div>
-                        </div>
-                          <p class="card-text">
-                            <br>
-                            {% if p.tags.exists %}
-                            <i class="bi bi-tags-fill"></i>
-                            {% for tag in p.tags.iterator %}
-                            <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
-                            {% endfor %}
-                            {% endif %}
-                          </p>
-                          <p class="card-text"><small class="text-body-secondary">{{p.created_at|timesince}}</small></p>
-                        </div>
-                      </div>
-
-
-
-
-
                         <div class="card-body" style="display: flex; height: 60px;">
-                          <span style="display: inline-block; width: 230px;"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title ">{{p.title|truncatechars:9}}</h4></a></span>
-                          <span class="float-end">좋아요 {{ p.like_count}}</span>
-                          <span class="float-end">댓글{{ p.comment_count}}</span>
-                          <span class="float-end">조회수 {{ p.views}}</span>
-
+                          <a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title ">{{p.title}}</h4></a>
+                          <span class="float-end">좋아요 개수{{ p.like_count}}</span>
+                          <span class="float-end">댓글 개수{{ p.comment_count}}</span>
+                          <span class="float-end">조회수{{ p.views}}</span>
                           {% if p.tags.exists %}
                           <i class="bi bi-tags-fill"></i>
                           {% for tag in p.tags.iterator %}
                           <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
-
-                          
                           {% endfor %}
 
 
@@ -76,8 +42,7 @@
                           <span class="badge badge-secondary float-right">미분류</span>
                           {% endif %}
                           <div class="small text-muted" style="line-height: 30px;">{{p.created_at|timesince}}</div>
-                          <div style="float: right;">
-                            <strong><p style="line-height: 30px; font-size: 15px; margin-left: 20px;" class="float-end">{{p.author|upper}}</p></strong></div>
+                            <p style="line-height: 30px;" class="float-end">{{p.author|upper}}</p>
                         </div>
                     </div>
                     {%endfor%}
@@ -179,17 +144,8 @@
                     </div>
                     <!-- Side widget-->
                     <div class="card mb-4">
-                        <div class="card-header">조회수 많은 글</div>
-                        <div class="card-body">
-                          {% for i in most_viewed_posts%}
-                          <div>
-                            <span style="width: 70px; display: inline-block;"><a style="text-decoration: none;" href="{{ i.get_absolute_url }}">{{i.title}}</a></span> 
-                            <span style="width: 30px;">  조회 {{i.views}}</span>
-                            <span style="margin-left: 20px;">  댓글 {{i.comment_count}}</span>
-                          </div>
-                          {% endfor %}
-                        </div>
-                        <!-- <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div> -->
+                        <div class="card-header">Side Widget</div>
+                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
                     </div>
                 </div>
             </div>

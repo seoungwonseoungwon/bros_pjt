@@ -143,13 +143,16 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 class PostList(ListView):
     model = Post
     ordering = '-pk'
-    paginate_by = 5
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         # context['comment_count'] = Comment.objects.filter().count()
+
+        # 가장 많은 views 수를 가진 게시물 5개
+        context['most_viewed_posts'] = Post.objects.order_by('-views')[:5]
         return context
     
 def category_page(request, slug):
@@ -186,26 +189,10 @@ class PostSearch(PostList):
         q = self.kwargs['q']
         context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
         return context
-
+    
 
 class PostDetail(DetailView):
     model = Post
-    # # @staticmethod
-    # # def view_count(request, pk):
-    # #     view_c = get_object_or_404(Post, pk=pk)
-    # #     view_c.views += 1
-    # #     view_c.save()
-    # #     return view_c
-
-    # # def get_object(self):
-    # def get_object(self, request, **kwargs):
-    #     print("pk 확인", kwargs)
-    #     # forum = get_object_or_404(Post)
-    #     forum = get_object_or_404(Post, pk=kwargs)
-    #     forum.views += 1
-    #     forum.save()
-    #     return forum
-
 
 
     def get_context_data(self, **kwargs):
@@ -213,6 +200,7 @@ class PostDetail(DetailView):
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         context['comment_form'] = CommentForm
+        context['most_viewed_posts'] = Post.objects.order_by('-views')[:5]
         return context
     
 def tag_page(request, slug):
@@ -247,25 +235,6 @@ def new_comment(request, pk):
     else:
         # 로그인하지 않았다면 PermissionDenied 권한이 거부됨
         raise PermissionDenied
-    
-# def new_recomment(request, pk):
-#     if request.user.is_authenticated:
-#         post = get_object_or_404(Comment, pk=pk)
-#         # post1 = get_object_or_404(Post,pk = pk)
-#         if request.method == 'POST':
-#             recomment_form = ReCommentForm(request.POST)
-#             if recomment_form.is_valid():
-#                 recomment = recomment_form.save(commit=False)
-#                 recomment.post = post
-#                 recomment.author = request.user
-#                 # post.comment_count += 1
-#                 # post.save()
-#                 recomment.save()
-#                 return redirect(post.get_absolute_url())
-#         else:
-#             return redirect(post.get_absolute_url())
-#     else:
-#         return PermissionDenied
 
 @login_required
 def create_recomment(request, post_id, comment_pk):

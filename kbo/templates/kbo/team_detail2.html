@@ -1,0 +1,64 @@
+{% extends 'base.html'%}
+
+
+{% block content %}
+{% include 'navbar.html'%}
+  {%for i in player_t%}
+  <a href="/{{i.team}}"><button>{{i.team}} 팀정보</button></a>
+{%endfor%}
+<div>
+  <div>
+  <h1>타자</h1>
+  <div style=" width: 500px; display: flex;">
+    {%for i in player_h%}
+    <span style="width: 200px;">
+      <!-- <div class="card" style="width: 18rem;"> -->
+      <div class="card" style="width: 200px;">
+        <!-- <img src="..." class="card-img-top" alt="..."> -->
+        <div class="card-body">
+          <h5 class="card-title">{{i.name}}</h5>
+          <p class="card-text"><strong>타율</strong> : {{i.batting_average}}</p>
+          <p class="card-text"><strong>팀 소속</strong> : {{i.team}}</p>
+          <p class="card-text"><strong>안타</strong> : {{i.hits}}</p>
+          <p class="card-text"><strong>홈런</strong> : {{i.home_runs}}</p>
+          <p class="card-text"><strong>OPS</strong> : {{i.on_base_plus_slugging}}</p>
+          <p class="card-text"><strong>경기출전</strong> : {{i.games_played}}</p>
+          <p class="card-text"><strong>승리기여도</strong> : {{i.war}}</p>
+          <p class="card-text"><strong>포지션</strong> : {{i.position}}</p>
+          <!-- <a href="#" class="btn btn-primary">선수 상세보기</a> -->
+        </div>
+      </div>
+    </span>
+      {%endfor%}
+    </div>
+  </div>
+  <div>
+  <h1>투수</h1>
+  <div style="width: 500px; display: flex;">
+  {%for i in player_p%}
+  <span style="width: 200px;;">
+    <div class="card" style="width: 18rem;">
+      <!-- <img src="..." class="card-img-top" alt="..."> -->
+      <div class="card-body">
+        <h5 class="card-title">{{i.name}}</h5>
+        <p class="card-text"><strong>평균 자책점</strong> : {{i.era}}</p>
+        <p class="card-text"><strong>팀 소속</strong> : {{i.team}}</p>
+        <p class="card-text"><strong>승</strong> : {{i.wins}}</p>
+        <p class="card-text"><strong>패</strong> : {{i.losses}}</p>
+        <p class="card-text"><strong>세이브</strong> : {{i.saves}}</p>
+        <p class="card-text"><strong>홀드</strong> : {{i.holds}}</p>
+        <p class="card-text"><strong>경기출전</strong> : {{i.games_played}}</p>
+        <p class="card-text"><strong>이닝</strong> : {{i.innings_pitched}}</p>
+        <p class="card-text"><strong>승리기여도</strong> : {{i.war}}</p>
+        <p class="card-text"><strong>포지션</strong> : {{i.position}}</p>
+        <!-- <a href="#" class="btn btn-primary">선수 상세보기</a> -->
+      </div>
+    </div>
+  </span>
+  
+  {%endfor%}
+  </div>
+</div>
+</div>
+
+{% endblock %}

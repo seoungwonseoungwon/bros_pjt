@@ -5,24 +5,40 @@
 {% block content %}
 
 {% include 'navbar.html'%}
-{%for i in info%}
-  <a href="/{{i.team}}_player"><button>{{i.team}} 선수정보</button></a>
-{% endfor %}
 
-  {%for i in info%}
-  <h1>{{i.team}}</h1>
-  <p><strong>시즌</strong> - {{i.year}}</p>
-  <p><strong>순위</strong> - {{i.rank}}</p>
-  <p><strong>타율</strong> - {{i.batting_average}}</p>
-  <p><strong>출루율</strong> - {{i.on_base_percentage}}</p>
-  <p><strong>장타율</strong> - {{i.slugging_percentage}}</p>
-  <p><strong>OPS</strong> - {{i.on_base_plus_slugging}}</p>
-  <p><strong>수비율</strong> - {{i.Fielding_Percentage}}</p>
-  <p><strong>평균 자책점</strong> - {{i.ERA}}</p>
-  <p><strong>이닝당 출루율</strong> - {{i.WHIP}}</p>
-  
-  {%endfor%}
-  
+
+<div class="container">
+  <div class="row">
+    {% for i in info %}
+    <div class="col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3>{{ i.team }}</h3>
+        </div>
+        <div class="card-body">
+          <p><strong>시즌:</strong> {{ i.year }}</p>
+          <p><strong>순위:</strong> {{ i.rank }}</p>
+          <p><strong>타율:</strong> {{ i.batting_average }}</p>
+          <p><strong>출루율:</strong> {{ i.on_base_percentage }}</p>
+          <p><strong>장타율:</strong> {{ i.slugging_percentage }}</p>
+          <p><strong>OPS:</strong> {{ i.on_base_plus_slugging }}</p>
+          <p><strong>수비율:</strong> {{ i.Fielding_Percentage }}</p>
+          <p><strong>평균 자책점:</strong> {{ i.ERA }}</p>
+          <p><strong>이닝당 출루율:</strong> {{ i.WHIP }}</p>
+        </div>
+        {% for i in info %}
+        <div class="team-button">
+          <a href="/{{ i.team }}_player">
+            <button class="btn btn-primary btn-lg">{{ i.team }} 선수정보</button>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
 
 
 {% endblock %}

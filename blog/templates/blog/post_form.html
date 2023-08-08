@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -8,13 +8,19 @@
 <hr>
 <form method="post" enctype="multipart/form-data" action="">{% csrf_token %}
   <table>
-    {{form}}
-    <tr>
+    {{form|crispy}}
+    <div id="div_id_tags_str">
+      <label for="id_tags_str">Tags:</label>
+      <input type="text" name="tags_str" id="id_tags_str" class="textinput textInput form-control">
+    </div>
+    <!-- <tr>
       <th><label for="id_tags_str">Tags:</label></th>
-      <td><input type="text" name="tags_str" id="id_tags_str"></td>
-    </tr>
+      <td></td>
+    </tr> -->
 
   </table>
+
+
   <button type="submit" class="btn btn-primary fload-right">Submit</button>
 </form>
 
