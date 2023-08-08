@@ -21,31 +21,21 @@
                     <h1>{% if search_info %} <small class="text-muted" style="color: black;">{{search_info}}</small>{%endif%}</h1>
                     <h1>{% if category%} <span class="badge badge-secondary" style="color: black;">{{category}}</span>{%endif%}</h1>
                     <h1>{% if tag%} <span class="badge" style="color: black;"><i class="bi bi-tags-fill"></i>{{tag}} ({{ tag.post_set.count}})</span>{%endif%}</h1>
-
-
-
                   {% if post_list.exists %}
                     {% for p in post_list%}
+                    <div class="card mb-4 mt-4" id="post-{{p.pk}}">
+
 
                       <!-- test -->
-                      <div class="card mb-3 mt-4">
+                      <div class="card mb-3">
                         <div class="card-body">
                           <div class="row" style="display: flex;">
-                          <div style="display: flex;" class="col-8"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title|truncatechars:20}}</h4></a>
-                            <span style="height: 34px; margin-left: 20px;" class="badge bg-secondary">
-                              {% if p.category %}
-                          <span class="badge badge-secondary float-right" style="color: black; line-height: 17px; font-size: 12px;">{{p.category}}</span>
-                          {% else %}
-                          <span style="color: black; line-height: 17px; font-size: 12px;" class="badge badge-secondary float-right">미분류</span>
-                          {% endif %}
-                            </span>
-                          </div>
-                          <div class="col-4">
+                          <div class="col"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title">{{p.title|truncatechars:9}}</h4></a></div>
+                          <div class="col">
                           <h5 class="card-title">{{p.author|upper}}</h5></div>
                         </div>
-                        <br>
-                        <div class="row" style="display: flex; height: 20px;">
-                          <p class="col-8 card-text">
+                          <p class="card-text">
+                            <br>
                             {% if p.tags.exists %}
                             <i class="bi bi-tags-fill"></i>
                             {% for tag in p.tags.iterator %}
@@ -53,21 +43,43 @@
                             {% endfor %}
                             {% endif %}
                           </p>
-                        </div>
-                        <div style="margin-top: 10px; height: 40px;">
-                          <span class="">좋아요 {{ p.like_count}}</span>
-                          <span class="">댓글{{ p.comment_count}}</span>
-                          <span class="">조회수 {{ p.views}}</span>
-                          <p class="col"><small class="text-body-secondary">{{p.created_at|timesince}}</small></p>
+                          <p class="card-text"><small class="text-body-secondary">{{p.created_at|timesince}}</small></p>
                         </div>
                       </div>
+
+
+
+
+
+                        <div class="card-body" style="display: flex; height: 60px;">
+                          <span style="display: inline-block; width: 230px;"><a style="text-decoration: none; color: black;" href="{{ p.get_absolute_url }}"><h4 class="card-title ">{{p.title|truncatechars:9}}</h4></a></span>
+                          <span class="float-end">좋아요 {{ p.like_count}}</span>
+                          <span class="float-end">댓글{{ p.comment_count}}</span>
+                          <span class="float-end">조회수 {{ p.views}}</span>
+
+                          {% if p.tags.exists %}
+                          <i class="bi bi-tags-fill"></i>
+                          {% for tag in p.tags.iterator %}
+                          <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light" style="color: black;">{{ tag }}</span></a>
+
+                          
+                          {% endfor %}
+
+
+                          <br>
+                            <br>
+
+                          {% endif %}
+                          {% if p.category %}
+                          <span class="badge badge-secondary float-right" style="color: black;">{{p.category}}</span>
+                          {% else %}
+                          <span class="badge badge-secondary float-right">미분류</span>
+                          {% endif %}
+                          <div class="small text-muted" style="line-height: 30px;">{{p.created_at|timesince}}</div>
+                          <div style="float: right;">
+                            <strong><p style="line-height: 30px; font-size: 15px; margin-left: 20px;" class="float-end">{{p.author|upper}}</p></strong></div>
+                        </div>
                     </div>
-
-
-
-
-
-
                     {%endfor%}
                     {% else %}
                     <h3>아직 게시물이 없습니다</h3>
