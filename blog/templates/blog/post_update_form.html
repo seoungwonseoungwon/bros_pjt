@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-
+{% load crispy_forms_tags %}
 
 {% block content %}
 {% include 'navbar.html'%}
@@ -8,7 +8,7 @@
 <hr>
 <form method="post" enctype="multipart/form-data" action="">{% csrf_token %}
   <table>
-    {{ form }}
+    {{ form|crispy}}
     <tr>
       <th><label for="id_tags_str">Tags:</label></th>
       <td><input type="text" name="tags_str" id="id_tags_str" value="{{ tags_str_default }}"></td>
