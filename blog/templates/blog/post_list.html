@@ -174,7 +174,7 @@
                         <div class="card-body">
                           {% for i in most_viewed_posts%}
                           <div>
-                            <span style="width: 70px; display: inline-block;"><a style="text-decoration: none;" href="{{ i.get_absolute_url }}">{{i.title}}</a></span> 
+                            <span style="width: 200px; display: inline-block;"><a style="text-decoration: none;" href="{{ i.get_absolute_url }}">{{i.title|truncatechars:12}}</a></span> 
                             <span style="width: 30px;">  조회 {{i.views}}</span>
                             <span style="margin-left: 20px;">  댓글 {{i.comment_count}}</span>
                           </div>

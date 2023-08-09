@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
+
 def likes(request, pk):
     like_b = get_object_or_404(Post, pk=pk)
     if request.user in like_b.like.all():
@@ -22,7 +23,6 @@ def likes(request, pk):
         like_b.like_count +=1
         like_b.save()
     return redirect('/blog/' + str(pk))
-
 
 
 
@@ -266,6 +266,19 @@ def create_recomment(request, post_id, comment_pk):
 
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
+    c_count = comment.post
+    post = comment.post
+    if request.user.is_authenticated and request.user == comment.author:
+        comment.delete()
+        c_count.comment_count -= 1
+        c_count.save()
+        return redirect(post.get_absolute_url())
+    else:
+        raise PermissionDenied
+    
+
+def delete_recomment(request, pk):
+    comment = get_object_or_404(ReComment, pk=pk)
     c_count = comment.post
     post = comment.post
     if request.user.is_authenticated and request.user == comment.author:
