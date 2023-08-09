@@ -148,7 +148,7 @@
 
 
                     
-                    <div class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small>
+                    <div style="width: 200px;" class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at|timesince }}</small>
                         {% if user.is_authenticated %}
                         {% if user in comment.like.all %}
                         <a style="text-decoration: none;" href="/blog/comment_likes/{{ comment.pk }}"><i style="color: red;" class="bi bi-heart-fill"></i></a>
@@ -211,7 +211,7 @@
 
 
                                 
-                                <div class="fw-bold">{{ recomment.author }} &nbsp;&nbsp;<small class="text-muted">{{ recomment.modified_at }}</small></div>
+                                <div style="width: 300px;" class="fw-bold">{{ recomment.author }} &nbsp;&nbsp;<small class="text-muted">{{ recomment.created_at|timesince }}</small></div>
                                 
                                 <div>{{ recomment.content }}</div>
                             </div>
