@@ -36,7 +36,7 @@
   <div>
     <span>순위</span>
     <span style="margin-left: 30px">팀</span>
-    <span style="margin-left: 60px;">확률</span>
+    <!-- <span style="margin-left: 60px;">확률</span> -->
     {% for i in update %}
     <span style="margin-left: 110px;">  업데이트 : {{i.updated_at|date:'Y.m.d H:m'}}</span>
     {%endfor%}
@@ -46,7 +46,7 @@
   <div style="width: 500px; height: 30px;">
     <div style="display: inline-block; width: 30px;">{{i.pre_rank}}</div>
     <div style="margin-left: 30px; display: inline-block; width: 80px;">{{i.team}}</div>
-    <div style=" display: inline-block; width: 80px;">{{i.pre_percent}}</div>
+
     <a style="margin-left: 40px;" href="{{i.get_absolute_team}}"><button style="display: inline-block; height: 30px; line-height: 15px;" type="button" class="btn btn-info">팀정보</button></a>
     <a href="{{ i.get_absolute_player }}"><button style="height: 30px; line-height: 15px;" type="button" class="btn btn-info">선수정보</button></a>
   </div>

@@ -29,6 +29,26 @@ class TeamList(models.Model):
     def get_absolute_team(self):
         return f'/{self.team}/'
     
+
+class PreRank(models.Model):
+    
+    team = models.ForeignKey(TeamList, on_delete=models.CASCADE,null=True)
+    one = models.FloatField()
+    two = models.FloatField()
+    three = models.FloatField()
+    four = models.FloatField()
+    five = models.FloatField()
+    six = models.FloatField()
+    seven = models.FloatField()
+    eight = models.FloatField()
+    nine = models.FloatField()
+    ten = models.FloatField()
+
+    def __str__(self):
+        return f'{self.team}'
+
+
+    
 class Hitting(models.Model):
     name = models.CharField(max_length=100)
     war = models.FloatField()

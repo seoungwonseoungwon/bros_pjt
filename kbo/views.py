@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import TeamList, Hitting, Pitcher
+from .models import TeamList, Hitting, Pitcher, PreRank
 
 # Create your views here.
 def index(request):
@@ -34,10 +34,15 @@ def team_detail(request,team):
 
 
 def team_info(request,team):
+    aa = TeamList.objects.get(team=team)
     info = TeamList.objects.filter(team=team)
     
+    pre_ran_per = PreRank.objects.filter(team=aa)
+    
     info_detail = {
-        'info':info
+        'info':info,
+        'aa':aa,
+        'pre_ran_per':pre_ran_per
     }
 
     return render(request, 'kbo/team_info.html', info_detail)

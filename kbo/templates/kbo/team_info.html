@@ -8,8 +8,18 @@
 
 
 <div class="container">
+  {% for i in info %}
+  <div style="display: flex;">
+  <div style="margin-top: 30px;" class="team-button">
+    <a href="/{{ i.team }}_player">
+      <button class="btn btn-primary btn-lg">{{ i.team }} 선수정보</button>
+    </a>
+  </div>
+
+</div>
+{% endfor %}
   <div class="row">
-    <div class="col-md-6">
+    <div class="col">
     {% for i in info %}
     <div style="width: 300px; margin-top: 50px;" class="col-lg-4 mb-4">
       <div class="card">
@@ -27,22 +37,47 @@
           <p><strong>평균 자책점:</strong> {{ i.ERA }}</p>
           <p><strong>이닝당 출루율:</strong> {{ i.WHIP }}</p>
         </div>
-        {% for i in info %}
-        <div class="team-button">
-          <a href="/{{ i.team }}_player">
-            <button class="btn btn-primary btn-lg">{{ i.team }} 선수정보</button>
-          </a>
-        </div>
-        {% endfor %}
+
+
+
       </div>
     </div>
   </div>
+  {% endfor %}
+    <div class="col">
+      {% for i in pre_ran_per %}
+    <div style="width: 300px; margin-top: 50px;" class="col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3>{{ i.team }}</h3>
+        </div>
+        <div class="card-body">
+          <p><strong>1위 확률 :</strong> {{ i.one }}</p>
+          <p><strong>2위 확률:</strong> {{ i.two }}</p>
+          <p><strong>3위 확률:</strong> {{ i.three }}</p>
+          <p><strong>4위 확률:</strong> {{ i.four }}</p>
+          <p><strong>5위 확률:</strong> {{ i.five }}</p>
+          <p><strong>6위 확률:</strong> {{ i.six }}</p>
+          <p><strong>7위 확률:</strong> {{ i.seven }}</p>
+          <p><strong>8위 확률:</strong> {{ i.eight }}</p>
+          <p><strong>9위 확률:</strong> {{ i.nine }}</p>
+          <p><strong>10위 확률:</strong> {{ i.ten }}</p>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
   <div class="col-md-6">
+    {% for i in info %}
     <img style="width: 800px; height: 600px;" src="{% static '머신러닝데이터'%}/{{i.team}}.png" alt="">
     {% endfor %}
   </div>
   </div>
 </div>
+
+
 
 
 
