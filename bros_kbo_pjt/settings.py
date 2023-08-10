@@ -95,7 +95,8 @@ DATABASES = {
     }
 }
 
-DATABASES = myenv.DATABASES
+# DATABASES = myenv.DATABASES
+# DATABASES = myenv.DATABASES
 
 
 # Password validation
