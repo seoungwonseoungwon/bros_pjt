@@ -25,6 +25,10 @@ rdr = csv.reader(f)
 # holds 11
 # innings_pitched 12
 # print(team_instance)
+
+
+
+
 for i in rdr:
 
     # print(i[1],i[2])
